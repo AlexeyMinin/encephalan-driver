@@ -19,12 +19,15 @@ CDriverEncephalan::CDriverEncephalan(IDriverContext& rDriverContext)
 	,m_pSample(NULL)
 {
 	m_oHeader.setSamplingFrequency(250);
-	m_oHeader.setChannelCount(64);
+	m_oHeader.setChannelCount(8);
+	m_ui32ConnectionPort = 120;
+	m_sConnectionIp = "127.0.0.1";
 	
 	// The following class allows saving and loading driver settings from the acquisition server .conf file
 	m_oSettings.add("Header", &m_oHeader);
 	// To save your custom driver settings, register each variable to the SettingsHelper
-	//m_oSettings.add("SettingName", &variable);
+	m_oSettings.add("ConnectionIp", &m_sConnectionIp);
+	m_oSettings.add("ConnectionPort", &m_ui32ConnectionPort);
 	m_oSettings.load();	
 }
 
@@ -152,12 +155,13 @@ bool CDriverEncephalan::isConfigurable(void)
 bool CDriverEncephalan::configure(void)
 {
 	// Change this line if you need to specify some references to your driver attribute that need configuration, e.g. the connection ID.
-	CConfigurationEncephalan m_oConfiguration(m_rDriverContext, OpenViBE::Directories::getDataDir() + "/applications/acquisition-server/interface-Encephalan.ui");
+	CConfigurationEncephalan m_oConfiguration(m_rDriverContext, OpenViBE::Directories::getDataDir() + "/applications/acquisition-server/interface-Encephalan.ui", m_ui32ConnectionPort, m_sConnectionIp);
 	
 	if(!m_oConfiguration.configure(m_oHeader))
 	{
 		return false;
 	}
+	m_sConnectionIp = m_oConfiguration.getConnectionIp();
 	m_oSettings.save();
 	
 	return true;

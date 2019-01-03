@@ -25,10 +25,13 @@ namespace OpenViBEAcquisitionServer
 		// you may have to add to your constructor some reference parameters
 		// for example, a connection ID:
 		//CConfigurationEncephalan(OpenViBEAcquisitionServer::IDriverContext& rDriverContext, const char* sGtkBuilderFileName, OpenViBE::uint32& rConnectionId);
-		CConfigurationEncephalan(OpenViBEAcquisitionServer::IDriverContext& rDriverContext, const char* sGtkBuilderFileName);
+		//CConfigurationEncephalan(OpenViBEAcquisitionServer::IDriverContext& rDriverContext, const char* sGtkBuilderFileName);
+		CConfigurationEncephalan(OpenViBEAcquisitionServer::IDriverContext& rDriverContext, const char* sGtkBuilderFileName, OpenViBE::uint32& rConnectionPort, char* rConnectionIp);
 
 		virtual bool preConfigure(void);
 		virtual bool postConfigure(void);
+
+		char* getConnectionIp();
 
 	protected:
 
@@ -42,6 +45,8 @@ namespace OpenViBEAcquisitionServer
 		 * Example:
 		 */
 		// uint32_t& m_ui32ConnectionID;
+		uint32_t& m_ui32ConnectionPort;
+		char* m_sConnectionIp;
 	};
 };
 

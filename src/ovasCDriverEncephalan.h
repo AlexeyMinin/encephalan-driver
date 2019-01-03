@@ -66,6 +66,8 @@ namespace OpenViBEAcquisitionServer
 		 * Example :
 		 */
 		// uint32_t m_ui32ConnectionID;
+		uint32_t m_ui32ConnectionPort;
+		char* m_sConnectionIp;
 	};
 };
 
