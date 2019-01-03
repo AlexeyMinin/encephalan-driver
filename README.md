@@ -6,7 +6,7 @@ Encephalan Driver for OpenVibe system
 
 This driver allows you to receive data from Encephalan software for OpenVibe system.
 
-Register the driver
+Registering the driver in system
 -------------------
 1. [Get](http://openvibe.inria.fr/repo-instructions/) OpenVibe system
 2. Put this driver to folder ***meta/extras/contrib/plugins/server-drivers/***
