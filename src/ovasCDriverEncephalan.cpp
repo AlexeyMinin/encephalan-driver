@@ -26,8 +26,8 @@ CDriverEncephalan::CDriverEncephalan(IDriverContext& rDriverContext)
 	// The following class allows saving and loading driver settings from the acquisition server .conf file
 	m_oSettings.add("Header", &m_oHeader);
 	// To save your custom driver settings, register each variable to the SettingsHelper
-	m_oSettings.add("ConnectionIp", &m_sConnectionIp);
-	m_oSettings.add("ConnectionPort", &m_ui32ConnectionPort);
+	//m_oSettings.add("ConnectionIp", &m_sConnectionIp);
+	//m_oSettings.add("ConnectionPort", &m_ui32ConnectionPort);
 	m_oSettings.load();	
 }
 
@@ -72,6 +72,9 @@ bool CDriverEncephalan::initialize(
 	// Saves parameters
 	m_pCallback=&rCallback;
 	m_ui32SampleCountPerSentBlock=ui32SampleCountPerSentBlock;
+	if (!connectEncephalan()) {
+		return false;
+	}
 	return true;
 }
 
@@ -142,7 +145,40 @@ bool CDriverEncephalan::uninitialize(void)
 	m_pSample=NULL;
 	m_pCallback=NULL;
 
+	closesocket(m_client);
+	WSACleanup();
+
 	return true;
+}
+
+bool CDriverEncephalan::connectEncephalan()
+{
+	WSADATA m_wsaData;
+	int m_wsaret = WSAStartup(0x101, &m_wsaData);
+	if (m_wsaret != 0) {
+		m_rDriverContext.getLogManager() << LogLevel_Error << "Error WSAStartup (initialization windows socket api): " << WSAGetLastError() << "\n";
+		return FALSE;
+	}
+
+	//m_client = socket(AF_INET, SOCK_STREAM, 0);
+	m_client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (m_client == INVALID_SOCKET)
+	{
+		m_rDriverContext.getLogManager() << LogLevel_Error << "Error socket (creation a socket): " << WSAGetLastError() << "\n";
+		WSACleanup();
+		return FALSE;
+	}
+
+	sockaddr_in	m_sockaddr;
+	m_sockaddr.sin_family = AF_INET;
+	m_sockaddr.sin_addr.s_addr = inet_addr(m_sConnectionIp);
+	m_sockaddr.sin_port = htons((u_short)m_ui32ConnectionPort);
+	int connectError = connect(m_client, (sockaddr*)&m_sockaddr, sizeof(m_sockaddr));
+	if (connectError != 0) {
+		m_rDriverContext.getLogManager() << LogLevel_Error << "Error connect (connection to a specified socket): " << WSAGetLastError() << "\n";
+		return FALSE;
+	}
+	return TRUE;
 }
 
 //___________________________________________________________________//
@@ -163,6 +199,6 @@ bool CDriverEncephalan::configure(void)
 	}
 	m_sConnectionIp = m_oConfiguration.getConnectionIp();
 	m_oSettings.save();
-	
+
 	return true;
 }

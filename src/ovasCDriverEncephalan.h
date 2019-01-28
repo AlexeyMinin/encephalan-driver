@@ -8,6 +8,8 @@
 #include "../ovasCSettingsHelper.h"
 #include "../ovasCSettingsHelperOperators.h"
 
+#include "winsock.h"
+
 namespace OpenViBEAcquisitionServer
 {
 	/**
@@ -61,6 +63,8 @@ namespace OpenViBEAcquisitionServer
 	
 	private:
 
+		bool connectEncephalan();
+
 		/*
 		 * Insert here all specific attributes, such as USB port number or device ID.
 		 * Example :
@@ -68,6 +72,9 @@ namespace OpenViBEAcquisitionServer
 		// uint32_t m_ui32ConnectionID;
 		uint32_t m_ui32ConnectionPort;
 		char* m_sConnectionIp;
+
+		// Socket
+		SOCKET m_client;
 	};
 };
 
