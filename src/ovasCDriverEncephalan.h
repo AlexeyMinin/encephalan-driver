@@ -64,6 +64,12 @@ namespace OpenViBEAcquisitionServer
 	private:
 
 		bool connectEncephalan();
+		bool sendRequestForData();
+		bool sendData(BYTE * data, int dataSize);
+		bool receiveData();
+		void readData(BYTE * data, int dataSize);
+		void getData(BYTE * & pData, int & DataSize, void * pTargetData, int TargetDataSize);
+		void receiveEEGData(BYTE * pCurData, int CurDataSize);
 
 		/*
 		 * Insert here all specific attributes, such as USB port number or device ID.
@@ -72,6 +78,7 @@ namespace OpenViBEAcquisitionServer
 		// uint32_t m_ui32ConnectionID;
 		uint32_t m_ui32ConnectionPort;
 		char* m_sConnectionIp;
+		uint32_t m_ui32currentPoint;
 
 		// Socket
 		SOCKET m_client;
