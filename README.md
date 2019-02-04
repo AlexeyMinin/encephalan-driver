@@ -1,5 +1,3 @@
-:negative_squared_cross_mark: It still does not work
-=====================================
 Encephalan Driver for OpenVibe system
 =====================================
 > Actual for version OpenVibe 2.2.0
