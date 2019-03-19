@@ -2,6 +2,8 @@ Encephalan Driver for OpenVibe system
 =====================================
 > Actual for version OpenVibe 2.2.0
 
+> Compatible only with Windows
+
 This driver allows you to receive data from Encephalan software for OpenVibe system.
 
 Registering the driver in system
@@ -14,12 +16,15 @@ Registering the driver in system
     ```C++
     OV_ADD_CONTRIB_DRIVER("${CMAKE_SOURCE_DIR}/contrib/plugins/server-drivers/encephalan-driver")
     ```
-4. Edit ***meta/extras/contrib/common/contribAcquisitionServer.inl***. This inline file is compiled with Acquisition Server and registers the driver. Add the line:
+4. Edit ***meta/extras/contrib/common/contribAcquisitionServer.inl***. This inline file is compiled with Acquisition Server and registers the driver.
+    - Add the line:
     ```C++
     #include "ovasCDriverEncephalan.h"
     ```
-5. Edit ***meta/extras/applications/platform/acquisition-server/src/ovasCAcquisitionServerGUI.cpp***. Add the line to the CAcquisitionServerGUI class constructor:
+    - And the lines to the function **initiateContributions**:
     ```C++
-    m_vDriver.push_back(new CDriverEncephalan(m_pAcquisitionServer->getDriverContext()));
+    #if defined TARGET_OS_Windows
+		    vDriver->push_back(new OpenViBEAcquisitionServer::CDriverEncephalan(pAcquisitionServer->getDriverContext()));
+    #endif
     ```
 6. [Build](http://openvibe.inria.fr/build-instructions/) OpenVibe system
